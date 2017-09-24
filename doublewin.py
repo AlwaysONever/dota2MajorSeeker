@@ -1,3 +1,5 @@
+import json
+
 class DoubleWin():
 	
 	TEAM_NAME = 0
@@ -22,3 +24,22 @@ class DoubleWin():
 				#if it lose one game, set lower bracket bit on ---- last bit stand for lower bracket
 				temp = team[TEAM_BITMAP] | 1
 			
+	def end(self):
+		return self.__teamList
+		
+	def endAndGen(self):
+		#generate schedlue
+		resultList = ""
+		for value in values(1:self.__mask):
+			bracket = ""
+			for team in self.__teamList:
+				if team[TEAM_BITMAP] == value:
+					bracket.append(team)
+			resultList.append(bracket)
+		return resultList
+	def endAndGenAndStoreInJSON(self, fileName):
+		resuilt = self.endAndGen(self)
+		with open(fileName, "a") as outStream:
+			json.dump(outStream, resuilt)
+		
+		
