@@ -37,6 +37,7 @@ class DoubleWin():
 					bracket.append(team)
 			resultList.append(bracket)
 		return resultList
+		
 	def endAndGenAndStoreInJSON(self, fileName):
 		resuilt = self.endAndGen(self)
 		with open(fileName, "a") as outStream:
