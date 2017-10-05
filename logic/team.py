@@ -15,33 +15,44 @@ class team():
 	OFF_STANDIN = 5
 	
 	def _init_(self, teamList):
-		if not isinstance(teamList, list)
+		if not isinstance(teamList, list):
 			return None
-		self.__players[POS_CARRY] = teamList[OFF_CARRY]
-		self.__players[POS_MID] = teamList[OFF_MID]
-		self.__players[POS_OFFLINE] = teamList[OFF_OFFLINE]
-		self.__players[POS_SUPPORT] = teamList[OFF_SUPPORT]
-		self.__players[POS_HARDSUP] = teamList[OFF_HARDSUP]
-		stand = ""
-		for li in teamList[OFF_STANDIN:]:
+		self.__players = {team.POS_CARRY: teamList[team.OFF_CARRY], team.POS_MID: teamList[team.OFF_MID],
+						  team.POS_OFFLINE: teamList[team.OFF_OFFLINE], team.POS_SUPPORT: teamList[team.OFF_SUPPORT],
+						  team.POS_HARDSUP: teamList[team.OFF_HARDSUP]}
+		stand = []
+		for li in teamList[team.OFF_STANDIN:]:
 			stand.append(li)
-		self.__players[POS_STANDIN] = stand
+		self.__players[team.POS_STANDIN] = stand
 	
 	def loadGameJSON(self, fileName):
 		with open(fileName) as outStream:
 			self.__gameDict = json.load(outStream)
 	
 	def addGame(self, gameDict):
-	
-	
-	def playerAdd(self, playerRef):
-	
+		#get win or lose status
+		winStatus = [gameDict["id"], gameDict["win"]]
+		self.__gameDict["winStatus"].append(winStatus)
+		if gameDict["win"] == "win":
+			self.__gameDict["won"] += 1
+		#get hero status
+		self.__gameDict["heros"].append(gameDict["heros"])
+		self.__gameDict["time"].append(gameDict["time"])
+		self.__gameDict["date"].append(gameDict["date"])
+		self.__gameDict["KDA"].append(gameDict["KDA"])
+		self.__gameDict["XPM"].append(gameDict["XPM"])
+		self.__gameDict["GPM"].append(gameDict["GPM"])
+			
+	def playerAdd(self, playerPos, playDict):
+		self.__players[playerPos].addGame(playDict)
+		
 	def getStyle(self):
-	
+		return self.__gameDict["style"]
+		
 	def genStyle(self):
-	
+		
 	def getWinRate(self):
-	
+		
 	def getMajorPonit(self):
 	
 	def addMajorPonit(self, ponit):

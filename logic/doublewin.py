@@ -14,74 +14,74 @@ class DoubleWin():
 		self.__teamList = list
 		#get mask for caculate upper bracket
 		seed = list[-1]
-		self.__mask = seed[TEAM_BITMAP]
+		self.__mask = seed[DoubleWin.TEAM_BITMAP]
 		self.__resultList = None
-		self.__turnsDict = ""
+		self.__turnsDict = []
 		i = 2
 		j = 1
 		while i <= self.__mask:
 			self.__turnsDict[i] = j
-				j += 1
-				i = i << 1
+			j += 1
+			i = i << 1
 		
 	
 	def addWin(self, winner, winp, loser, losp):
 		#second member in every team will be set to be 2 after first initailization , 
 		#and the first member is the name of that team. 
 		for team in self.__teamList:
-			if team[TEAM_NAME] == winner:
+			if team[DoubleWin.TEAM_NAME] == winner:
 				#if a team wins a total bo, set a bit signal
-				temp = team[TEAM_BITMAP] * 2
-				team[TEAM_BITMAP] |= temp
+				temp = team[DoubleWin.TEAM_BITMAP] * 2
+				team[DoubleWin.TEAM_BITMAP] |= temp
 				#point high 4 bits stand for lose games, and low 4 bits stand for win games
-				team[TEAM_POINT].append(winp)
-			else if team[TEAM_NAME] == loser:
+				team[DoubleWin.TEAM_POINT].append(winp)
+			elif team[DoubleWin.TEAM_NAME] == loser:
 				#if it lose one game, set lower bracket bit on ---- last bit stand for lower bracket
-				temp = team[TEAM_BITMAP] | UPPER_BRACKET
-				team[TEAM_POINT].append(losp)
+				temp = team[DoubleWin.TEAM_BITMAP] | DoubleWin.UPPER_BRACKET
+				team[DoubleWin.TEAM_POINT].append(losp)
 			
 	def end(self):
 		return self.__teamList
 		
 	def endAndGen(self):
 		#generate schedlue
-		resultList = ""
-		for value in values(1:self.__mask):
-			bracket = ""
+		resultList = []
+		for value in range(1,self.__mask):
+			bracket = []
 			for team in self.__teamList:
-				if team[TEAM_BITMAP] == value:
+				if team[DoubleWin.TEAM_BITMAP] == value:
 					bracket.append(team)
 			resultList.append(bracket)
 		self.__resultList = resultList
 		return resultList
 		
 	def storeInJSON(self, fileName):
-		if self.__resultList == ""
+		if self.__resultList == None:
 			return False
-		resuilt = self.endAndGen(self)
+		resuilt = self.endAndGen()
 		with open(fileName, "w") as outStream:
 			json.dump(outStream, resuilt)
 		return True
 	def storeInCSV(self, fileName):
-		if self.__resultList == ""
+		if self.__resultList == None:
 			return False
-		data = ""
+		data = []
 		header = ["team", "turn", "win", "winrate"]
 		data.append(header)
 		dict = self.__turnsDict
 		for li in self.__resultList:
-			row = ""
-			row.append(li[TEAM_NAME])
-			bitmap = li[TEAM_BITMAP]
+			row = []
+			row.append(li[DoubleWin.TEAM_NAME])
+			bitmap = li[DoubleWin.TEAM_BITMAP]
 			mask = bitmap & self.__mask
-			bracket = bitmap & UPPER_BRACKET
-			if bracket == UPPER_BRACKET
+			bracket = bitmap & DoubleWin.UPPER_BRACKET
+			if bracket == DoubleWin.UPPER_BRACKET:
 				turn = "upper bracket" + str(self.__turnsDict[mask])
-			else 
+			else:
 				turn = "lower bracket" + str(self.__turnsDict[mask])
 			row.append(turn)
 			
-			ponits = li[TEAM_POINT]
+			ponits = li[DoubleWin.TEAM_POINT]
 			point = 0 
 			loss = 0
 			for p in ponits:
